@@ -1,6 +1,6 @@
 <?php
 
-abstract class User
+class User
 {
     private string $nomUser;
     private string $prenomUser;

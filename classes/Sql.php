@@ -7,6 +7,8 @@ class Sql
     private string $database = "poo";
     private string $userPassword = "";
     private object $connexion;
+    private string $emailUser;
+    private string $password;
 
     public function __construct()
     {
@@ -32,6 +34,42 @@ class Sql
         catch(PDOException $e)
         {
             die("Erreur : " . $e->getMessage());
+        }
+    }
+    public function signIn()
+    {
+
+    }
+    public function login($emailUser, $password)
+    {   
+        $this->connexion->prepare("SELECT * FROM USERS WHERE USERMAIL='$emailUser'");
+        $this->connexion->execute();
+        $resultat = $this->connexion->fetchAll(PDO::FETCH_OBJ);
+        
+       
+        if(count($resultat) === 0) {
+            echo "Pas de résultat avec votre login/mot de passe";
+        }
+
+        else {
+            $passwordRequete = $resultat[0]->MDP;
+            if(password_verify($password, $passwordRequete)) {
+                if(!isset($_SESSION['login'])) {
+                    $_SESSION['login'] = true;
+                    $_SESSION['nom'] = $resultat[0]->nom;
+                    $_SESSION['prenom'] = $resultat[0]->prenom;
+                    $_SESSION['role'] = $resultat[0]->idrole;
+                    echo "<script>
+                    document.location.replace('http://localhost/VernonPHPPOOExercice/');
+                    </script>";
+                }
+                else {
+                    echo "<p>Vous êtes déjà connecté, donc vous navez rien à faire ici";
+                }
+            }
+            else {
+                echo "Bien tenté, mais non";
+            }
         }
     }
     public function __destruct()
