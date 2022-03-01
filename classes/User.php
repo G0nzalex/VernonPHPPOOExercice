@@ -1,11 +1,11 @@
 <?php
 
-class User
+abstract class User
 {
     private string $nomUser;
     private string $prenomUser;
-    private string $email;
-    private string $dateNaissance;
+    private string $emailUser;
+    private string $dateDeNaissanceUser;
     private int $role;
 
     public function getNomUser() : string|bool
@@ -26,13 +26,13 @@ class User
     }
     public function getemail() : string|bool
     {
-        return isset($this->email) ? $this->email : false;
+        return isset($this->emailUser) ? $this->emailUser : false;
     }
     public function setemail(string $email): bool
     {
         if (filter_var($email, FILTER_VALIDATE_EMAIL))
         {
-            $this->email = $email;
+            $this->emailUser = $email;
             return true;
         }
         else
@@ -40,10 +40,30 @@ class User
     }
     public function getdateNaissance() : string|bool
     {
-        return isset($this->dateNaissance) ? $this->dateNaissance : false;
+        return isset($this->dateDeNaissanceUser) ? $this->dateDeNaissanceUser : false;
     }
     public function setdateNaissance(string $dateNaissance): void
     {
-        $this->dateNaissance = $dateNaissance;
+        $this->dateDeNaissanceUser = $dateNaissance;
     }
+
+    public function inscription(Sql $c) // équivalent à new SQL()
+    {
+        $requete = "INSERT INTO users (usernom, userprenom, usermail, userdatenaissance, id_role)
+        VALUES ('$this->nomUser', '$this->prenomUser', '$this->emailUser', '$this->dateDeNaissanceUser' , 2)";
+        $c->insertion($requete);
+    }
+    // public function seConnecter(Sql $c)
+    // {
+    //     $query = "SELECT * FROM users WHERE usermail ='$emailUser'";
+    //     $query->execute();
+    //     $resultat = $query->fetchAll(PDO::FETCH_ASSOC);
+
+    //     if (count($resultat === 0))
+    //     {
+    //         $messageErreur = 'Votre email n\'existe pas';
+    //         return $messageErreur;
+    //     }
+    //     $c->insertion($query);
+    // }
 }
