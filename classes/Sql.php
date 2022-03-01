@@ -21,6 +21,19 @@ class Sql
             die("Erreur : " . $e->getMessage());
         }
     }
+    public function insertion($requete)
+    {
+        try
+        {
+            $this->connexion->beginTransaction();
+            $this->connexion->exec($requete);
+            $this->connexion->commit();
+        }
+        catch(PDOException $e)
+        {
+            die("Erreur : " . $e->getMessage());
+        }
+    }
     public function __destruct()
     {
         unset($this->connexion);
